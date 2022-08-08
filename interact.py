@@ -52,6 +52,7 @@ for t in range(1000):
     submit = driver.find_element(By.XPATH, "//button[@data-key=\"↵\"]")
     submit.click()
 
+    
     time.sleep(2)
 
     a = driver.find_elements(By.CLASS_NAME, "Tile-module_tile__3ayIZ")
@@ -106,6 +107,7 @@ for t in range(1000):
     print(fiv)
 
     df = df[df["FreqWords"].notnull() == True]
+    print(df)
     r = random.randint(0, len(df)-1)
     print(df.iloc[r]["FreqWords"])
     words.append(df.iloc[r]["FreqWords"].lower())
