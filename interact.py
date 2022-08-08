@@ -1,3 +1,4 @@
+# Imports
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -16,7 +17,7 @@ close = driver.find_element(By.CLASS_NAME, "Modal-module_closeIcon__b4z74")
 close.click()
 
 
-words = ["notch", "right", "slank", "stick"]
+words = ["notch"]
 
 
 ind = 0
