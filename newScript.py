@@ -20,7 +20,6 @@ while True:
     if len(inc) != 0:
         includedChars.extend(inc)
 
-    notExcluded = [x for x in string.ascii_lowercase if x not in excludedChars]
 
     one = input("First Letter: ")
     two = input("Second Letter: ")

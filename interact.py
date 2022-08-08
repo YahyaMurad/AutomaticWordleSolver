@@ -5,6 +5,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+import pandas as pd
+import random
+
+df = pd.read_csv('FreqWords.csv')
+
+df['FreqWords'].str.lower()
+df.drop_duplicates()
+
 
 PATH = "chromedriver_win32/chromedriver.exe"
 driver = webdriver.Chrome(PATH)
@@ -35,7 +43,7 @@ positions = {
     4: 0 
 }
 
-for t in range(6):
+for t in range(1000):
     word = words[ind]
     for s in word:
         but = driver.find_element(By.XPATH, "//button[@data-key=\"" + s + "\"]")
@@ -53,7 +61,7 @@ for t in range(6):
         inner = n.get_attribute("innerHTML")
         state = n.get_attribute("data-state")
 
-        if state == "included":
+        if state == "present":
             included.append(inner)
         elif state == "absent":
             excluded.append(inner)
@@ -61,14 +69,48 @@ for t in range(6):
             positions[i % 5] = inner
 
 
-    print(included)
-    print(excluded)
-    print(positions)
+    includedChars = included
+    excludedChars = excluded
+
+    one = "" if positions[0] == 0 else positions[0]
+    two = "" if positions[1] == 0 else positions[1]
+    thr = "" if positions[2] == 0 else positions[2]
+    fou = "" if positions[3] == 0 else positions[3]
+    fiv = "" if positions[4] == 0 else positions[4]
+
+    one = one if one != "" else ("[^" + "".join(excludedChars) + "]" if excludedChars != "" else ".")
+    two = two if two != "" else ("[^" + "".join(excludedChars) + "]" if excludedChars != "" else ".")
+    thr = thr if thr != "" else ("[^" + "".join(excludedChars) + "]" if excludedChars != "" else ".")
+    fou = fou if fou != "" else ("[^" + "".join(excludedChars) + "]" if excludedChars != "" else ".")
+    fiv = fiv if fiv != "" else ("[^" + "".join(excludedChars) + "]" if excludedChars != "" else ".")
+
+    print(includedChars)
+    print(excludedChars)
+    print(one)
+    print(two)
+    print(thr)
+    print(fou)
+    print(fiv)
+
+    df["FreqWords"] = df["FreqWords"].str.extract("(^" + one + two + thr + fou + fiv + ")", expand=True)
+    
+    for i in includedChars:
+        df["FreqWords"] = df["FreqWords"].str.extract("(.*[" + i + "].*)", expand=True)
+
+    print(includedChars)
+    print(excludedChars)
+    print(one)
+    print(two)
+    print(thr)
+    print(fou)
+    print(fiv)
+
+    df = df[df["FreqWords"].notnull() == True]
+    r = random.randint(0, len(df)-1)
+    print(df.iloc[r]["FreqWords"])
+    words.append(df.iloc[r]["FreqWords"].lower())
 
     start = end
     end = end + 5
     num += 1
     ind += 1
-
-datastates = ["absent", "present", "correct", "empty"]
-
